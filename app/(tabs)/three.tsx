@@ -1,0 +1,121 @@
+import { GlobalStyles } from '@/components/Styles';
+import { Text, View } from '@/components/Themed';
+
+// useEffect is another React hook
+// It is included/built-in by default 
+// It allows us to run side effects like fetch and timers
+import React, { useEffect, useState } from 'react';
+
+import { Link } from 'expo-router';
+
+// ActivityIndicator is also built into React
+// It literally just creates a spinning wheel
+import { ActivityIndicator, FlatList, StyleSheet } from 'react-native';
+
+// This is how we set up a type-safe object
+// Type safety makes our code safer and more efficient
+// 1. Safer: if we expect a number, we get a number (or fail)
+// 2. Efficient: ints use less RAM/memory than strings
+// These objects and properties are based on the WP API
+interface Post {
+  id: number;
+  title: { rendered: string };
+  excerpt: { rendered: string };
+}
+
+export default function TabTwoScreen() {
+  // We are initializing our "posts" state
+  // using a list of our Post interface
+  const [posts, setPosts] = useState<Post[]>([]);
+
+  // We are using state to determine if we 
+  // show the indicator (true/yes by default)
+  const [loading, setLoading] = useState(true);
+
+  // useEffect takes two parameters/arguments
+  // 1. anonymous function to hold the code we're going to run
+  // because we're inside a "function," we use the arrow syntax
+  // 2. The dependancy which determines how/when it renders
+  // The empty array means it runs on "document.ready"
+  useEffect(() => {
+    // async and await force functions to use Promises
+    // This is a different way of doing .then on Fetches
+    // We're chaining events sequentially (promise me you'll do this after something)
+    // We're capturing an anonymous arrow function in a variable or constant
+    const fetchPost = async () => {
+      // try/catch/finally is "Exception Handling"
+      // it lets us fail gracefully (we can respond to errors)
+      try {
+        // Await here is essentially "then" 
+        const response = await fetch('https://www.theprojector.ca/cors-api/recent-posts.php');
+        // After we have data from the fetch
+        // "then" we format it as JSON
+        const data = await response.json();
+
+        // then we update our "post" state with the API data
+        setPosts(data);
+      }
+      catch (error) {
+        // if we failed, log it
+        console.log('Fetch error', error);
+      }
+      finally {
+        // then update the loading state
+        setLoading(false);
+      }
+    }
+
+    // call our fetch functionality
+    // the arrow function is in this variable
+    // so to call it , throw () on the variable name
+    fetchPost();
+  }, []);
+
+  // if our loading state variable is "true"
+  // Return our loading indicator
+  if (loading) {
+    return <ActivityIndicator />;
+    // if we return here, nothing below this point runs
+  }
+
+  return (
+    // FlatList is how we do UL/OL
+    // it will loop for us if we pass an array to "data"
+    // keyExtractor is how we give LIs an "ID" attribute
+    // This is required by React
+    // renderItem is how we fill our LI
+    // Note the rounded brackets after => in renderItem
+    // as we are rendering JSX
+    <FlatList 
+      data={posts}
+      keyExtractor={(item) => item.id.toString() }
+      renderItem={({item}) => (
+        <View style={styles.container}>
+          <Link href={{pathname: '/article', params:{id: item.id}}}>
+            <Text style={GlobalStyles.title}>{ item.title.rendered }</Text>
+          </Link>
+
+          <Text style={GlobalStyles.text}>{ item.excerpt.rendered }</Text>
+        </View>
+    )}
+    />
+    
+  );
+}
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  title: {
+    fontSize: 20,
+    fontWeight: 'bold',
+  },
+  separator: {
+    marginVertical: 30,
+    height: 1,
+    width: '80%',
+  },
+});
