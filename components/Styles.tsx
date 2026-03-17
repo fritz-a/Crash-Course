@@ -5,7 +5,7 @@ export const GlobalStyles = StyleSheet.create({
         color: 'red',
         fontWeight: 'bold',
         fontSize: 20,
-        fontFamily: 'VcrOsd'
+        fontFamily: 'Syne_Bold'
     },
     text : {
         fontFamily: 'Inter_400Regular'

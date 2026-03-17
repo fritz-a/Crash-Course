@@ -27,7 +27,8 @@ export default function RootLayout() {
     SpaceMono: require('../assets/fonts/SpaceMono-Regular.ttf'),
     ...FontAwesome.font,
     VcrOsd: require('../assets/fonts/VCR_OSD_MONO_1.001.ttf'),
-    Inter_400Regular
+    Inter_400Regular,
+    Syne_Bold: require('../assets/fonts/Syne-Bold.ttf'),
   });
 
   // Expo Router uses Error Boundaries to catch errors in the navigation tree.
