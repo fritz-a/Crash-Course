@@ -100,8 +100,14 @@ export default function IndexScreen() {
     <FlatList
       data={posts}
       keyExtractor={(item) => item.id.toString()}
-      renderItem={({ item }) => (
-        <View style={styles.container}>
+      renderItem={({ item, index }) => (
+        <View
+          style={[
+            styles.container,
+            // this aligns the text to opposite sides - the titles zig zag
+            { alignItems: index % 2 === 0 ? 'flex-start' : 'flex-end' },
+          ]}
+        >
           <Text style={GlobalStyles.title}>{item.name}</Text>
         </View>
       )}
@@ -111,8 +117,20 @@ export default function IndexScreen() {
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
+    display: 'flex',
+    flexDirection: 'column',
     alignItems: 'center',
     justifyContent: 'center',
+    minHeight: '22vh',
+    cursor: 'pointer',
+    overflow: 'hidden',
+    // margin: '0 auto',
+    margin: '2rem',
+    borderRadius: '100%',
+    width: 'min-content',
+    
   },
+
+
+
 });
