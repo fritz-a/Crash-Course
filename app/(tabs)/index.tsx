@@ -1,5 +1,6 @@
 import { GlobalStyles } from '@/components/Styles';
 import { Text, View } from '@/components/Themed';
+import { API_URL } from '@/constants/config';
 
 // useEffect is another React hook
 // It is included/built-in by default 
@@ -40,7 +41,7 @@ export default function IndexScreen() {
       // it lets us fail gracefully (we can respond to errors)
       try {
          // Await here is essentially "then"
-        const response = await fetch('http://localhost:8888/crashcourse/list.php');
+        const response = await fetch(API_URL);
         // After we have data from the fetch
         // "then" we format it as JSON
         const data = await response.json();
