@@ -73,13 +73,13 @@ export default function TabTwoScreen() {
           <Text>{review.overview}</Text>
           <Text style={styles.label}>Favourite Part</Text>
           <Text>{review['favourite part']}</Text>
-          <Text style={styles.label}>Challenge</Text>
+          <Text style={styles.label}>Biggest Challenge</Text>
           <Text>{review.challenge}</Text>
-          <Text style={styles.label}>Wished You Would Have Known</Text>
+          <Text style={styles.label}>Is there anything you wish you knew before entering this program?</Text>
           <Text>{review['wished you would have known']}</Text>
-          <Text style={styles.label}>Career After Graduating</Text>
+          <Text style={styles.label}>What type of job are you hoping to pursue after graduation?</Text>
           <Text>{review['career after graduating']}</Text>
-          <Text style={styles.label}>Advice</Text>
+          <Text style={styles.label}>Advice for Future Students</Text>
           <Text>{review.advice}</Text>
         </>
       ) : (
