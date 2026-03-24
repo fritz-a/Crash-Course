@@ -1,6 +1,7 @@
 import { GlobalStyles } from '@/components/Styles';
 import { Text, View } from '@/components/Themed';
 import { API_URL } from '@/constants/config';
+import { router } from 'expo-router';
 
 // useEffect is another React hook
 // It is included/built-in by default 
@@ -97,12 +98,18 @@ export default function IndexScreen() {
     // renderItem is how we fill our LI
     // Note the rounded brackets after => in renderItem
     // as we are rendering JSX
+    // Clickable menu items which lead to TAB TWO - assisted by copilot
     <FlatList
       data={posts}
       keyExtractor={(item) => item.id.toString()}
       renderItem={({ item }) => (
         <View style={styles.container}>
-          <Text style={GlobalStyles.title}>{item.name}</Text>
+          <Text
+            style={GlobalStyles.title}
+            onPress={() => router.push({ pathname: '/(tabs)/two', params: { id: item.id } })}
+          >
+            {item.name}
+          </Text>
         </View>
       )}
     />
