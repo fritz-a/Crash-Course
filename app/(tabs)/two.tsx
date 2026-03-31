@@ -46,6 +46,7 @@ export default function TabTwoScreen() {
         // This is the same as typing review.php?id=1 in a browser
         const response = await fetch(`${REVIEW_URL}?id=${id}`);
         const data: Review = await response.json();
+        console.log('API data:', data); // add this
         // Store the parsed object directly — no stringify needed
         setReview(data);
       } catch (error) {
@@ -92,6 +93,8 @@ export default function TabTwoScreen() {
 const styles = StyleSheet.create({
   container: {
     padding: 20,
+    backgroundColor: '#ffffff',
+    flexGrow: 1,
   },
   title: {
     fontSize: 22,
@@ -104,5 +107,6 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     marginTop: 12,
     marginBottom: 4,
+
   },
 });
