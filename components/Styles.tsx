@@ -2,10 +2,11 @@ import { StyleSheet } from 'react-native';
 
 export const GlobalStyles = StyleSheet.create({
     title: {
-        color: 'red',
+        color: 'white',
         fontWeight: 'bold',
-        fontSize: 20,
-        fontFamily: 'Syne_Bold'
+        fontSize: 24,
+        fontFamily: 'Syne_Bold',
+        width: '15rem',
     },
     text : {
         fontFamily: 'Inter_400Regular'
