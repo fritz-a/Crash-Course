@@ -122,7 +122,7 @@ const styles = StyleSheet.create({
   blob1: {
     position: 'absolute',
     top: -120,
-    left: -100,
+    left: -130,
     width: windowWidth * 1.2,
     height: windowWidth * 1.2,
     resizeMode: 'contain',
@@ -130,7 +130,7 @@ const styles = StyleSheet.create({
   blob2: {
     position: 'absolute',
     top: windowHeight * 0.07,
-    right: -70,
+    right: -100,
     width: windowWidth * 1.2,
     height: windowWidth * 1.2,
     resizeMode: 'contain',
@@ -138,7 +138,7 @@ const styles = StyleSheet.create({
   blob3: {
     position: 'absolute',
     top: windowHeight * 0.25,
-    left: -75,
+    left: -155,
     width: windowWidth * 1.2,
     height: windowWidth * 1.2,
     resizeMode: 'contain',
@@ -146,7 +146,7 @@ const styles = StyleSheet.create({
   blob4: {
     position: 'absolute',
     top: windowHeight * 0.50,
-    right: -60,
+    right: -90,
     width: windowWidth * 1.2,
     height: windowWidth * 1.2,
     resizeMode: 'contain',
