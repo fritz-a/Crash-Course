@@ -7,6 +7,7 @@ export const GlobalStyles = StyleSheet.create({
         fontSize: 24,
         fontFamily: 'Syne_Bold',
         width: '15rem',
+       
     },
     text : {
         fontFamily: 'Inter_400Regular'

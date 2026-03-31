@@ -9,6 +9,7 @@ import {
   Image,
   View,
   StyleSheet,
+  TouchableOpacity, // lets us make items tappable
 } from 'react-native';
 
 const { width: windowWidth, height: windowHeight } = Dimensions.get('window');
@@ -83,10 +84,12 @@ export default function HomeScreen() {
       <Image source={require('@/assets/images/Gradient-Blob-4.png')} style={styles.blob4} />
 
       {/* Text labels sit on top of the blobs, alternating left and right */}
+      {/* Tapping an item navigates to Tab Two and passes the item id as a param */}
       <View style={styles.overlayContent}>
         {posts.slice(0, 4).map((item, index) => (
-          <View
+          <TouchableOpacity
             key={item.id}
+            onPress={() => router.push({ pathname: '/(tabs)/two', params: { id: item.id } })}
             style={[
               styles.container,
               index % 2 === 0 ? styles.alignStart : styles.alignEnd,
@@ -98,7 +101,7 @@ export default function HomeScreen() {
               // right-aligned text gets less padding to sit closer to the edge
               index % 2 !== 0 ? styles.linkTextRight : styles.linkTextLeft,
             ]}>{item.name}</Text>
-          </View>
+          </TouchableOpacity>
         ))}
       </View>
     </View>
@@ -134,7 +137,7 @@ const styles = StyleSheet.create({
   },
   blob3: {
     position: 'absolute',
-    top: windowHeight * 0.30,
+    top: windowHeight * 0.25,
     left: -75,
     width: windowWidth * 1.2,
     height: windowWidth * 1.2,
@@ -182,6 +185,6 @@ const styles = StyleSheet.create({
   },
   // right-side text sits closer to the edge
   linkTextRight: {
-    paddingHorizontal: 12,
+    paddingHorizontal: 20,
   },
 });
