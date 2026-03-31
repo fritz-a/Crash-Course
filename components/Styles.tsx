@@ -2,7 +2,7 @@ import { StyleSheet } from 'react-native';
 
 export const GlobalStyles = StyleSheet.create({
     title: {
-        color: 'white',
+        color: 'black',
         fontWeight: 'bold',
         fontSize: 24,
         fontFamily: 'Syne_Bold',
