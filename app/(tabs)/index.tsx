@@ -1,47 +1,35 @@
 import { GlobalStyles } from '@/components/Styles';
-import { Text, View } from '@/components/Themed';
+import { Text } from '@/components/Themed';
 import { API_URL } from '@/constants/config';
 import { router } from 'expo-router';
+import { useEffect, useState } from 'react';
+import {
+  ActivityIndicator,
+  Dimensions,
+  Image,
+  View,
+  StyleSheet,
+} from 'react-native';
 
-// useEffect is another React hook
-// It is included/built-in by default 
-// It allows us to run side effects like fetch and timers
-import React, { useEffect, useState } from 'react';
+const { width: windowWidth, height: windowHeight } = Dimensions.get('window');
 
-// ActivityIndicator is also built into React
-// It literally just creates a spinning wheel
-import { ActivityIndicator, FlatList, StyleSheet } from 'react-native';
-
-// This is how we set up a type-safe object
-// Type safety makes our code safer and more efficient
-// 1. Safer: if we expect a number, we get a number (or fail)
-// 2. Efficient: ints use less RAM/memory than strings
-// These objects and properties are based on the WP API
-interface Post {
-  id: number;
-  name: string;
-}
-
-export default function IndexScreen() {
-  // We are initializing our "posts" state
-  // using a list of our Post interface
-  const [posts, setPosts] = useState<Post[]>([]);
-
-   // We are using state to determine if we 
+export default function HomeScreen() {
+  // We are using state to determine if we
   // show the indicator (true/yes by default)
   const [loading, setLoading] = useState(true);
+  const [posts, setPosts] = useState<{ id: number; name: string }[]>([]);
 
   useEffect(() => {
-  // useEffect takes two parameters/arguments
-  // 1. anonymous function to hold the code we're going to run
-  // because we're inside a "function," we use the arrow syntax
-  // 2. The dependancy which determines how/when it renders
-  // The empty array means it runs on "document.ready"
+    // useEffect takes two parameters/arguments
+    // 1. anonymous function to hold the code we're going to run
+    //    because we're inside a "function," we use the arrow syntax
+    // 2. The dependency which determines how/when it renders
+    //    The empty array means it runs on "document.ready"
     const fetchPost = async () => {
       // try/catch/finally is "Exception Handling"
       // it lets us fail gracefully (we can respond to errors)
       try {
-         // Await here is essentially "then"
+        // Await here is essentially "then"
         const response = await fetch(API_URL);
         // After we have data from the fetch
         // "then" we format it as JSON
@@ -54,24 +42,20 @@ export default function IndexScreen() {
               name: String(item?.name ?? item ?? ''),
             }))
           );
-        }
-        else if (data && typeof data === 'object') {
+        } else if (data && typeof data === 'object') {
           setPosts(
             Object.entries(data as Record<string, unknown>).map(([id, name]) => ({
               id: Number(id),
               name: String(name ?? ''),
             }))
           );
-        }
-        else {
+        } else {
           setPosts([]);
         }
-      }
-      catch (error) {
+      } catch (error) {
         // if we failed, log it
         console.log('Fetch error', error);
-      }
-      finally {
+      } finally {
         // then update the loading state
         setLoading(false);
       }
@@ -79,7 +63,7 @@ export default function IndexScreen() {
 
     // call our fetch functionality
     // the arrow function is in this variable
-    // so to call it , throw () on the variable name
+    // so to call it, throw () on the variable name
     fetchPost();
   }, []);
 
@@ -91,48 +75,113 @@ export default function IndexScreen() {
   }
 
   return (
-    // FlatList is how we do UL/OL
-    // it will loop for us if we pass an array to "data"
-    // keyExtractor is how we give LIs an "ID" attribute
-    // This is required by React
-    // renderItem is how we fill our LI
-    // Note the rounded brackets after => in renderItem
-    // as we are rendering JSX
-    // Clickable menu items which lead to TAB TWO - assisted by copilot
-    <FlatList
-      data={posts}
-      keyExtractor={(item) => item.id.toString()}
-      renderItem={({ item, index }) => (
-        <View
-          style={[
-            styles.container,
-            // this aligns the text to opposite sides - the titles zig zag
-            { alignItems: index % 2 === 0 ? 'flex-start' : 'flex-end' },
-          ]}
-        >
-          <Text style={GlobalStyles.title}>{item.name}</Text>
-        </View>
-      )}
-    />
+    <View style={styles.fullScreen}>
+      {/* Blobs are absolutely positioned to form the diagonal chain */}
+      <Image source={require('@/assets/images/Gradient-Blob.png')} style={styles.blob1} />
+      <Image source={require('@/assets/images/Gradient-Blob-2.png')} style={styles.blob2} />
+      <Image source={require('@/assets/images/Gradient-Blob-3.png')} style={styles.blob3} />
+      <Image source={require('@/assets/images/Gradient-Blob-4.png')} style={styles.blob4} />
+
+      {/* Text labels sit on top of the blobs, alternating left and right */}
+      <View style={styles.overlayContent}>
+        {posts.slice(0, 4).map((item, index) => (
+          <View
+            key={item.id}
+            style={[
+              styles.container,
+              index % 2 === 0 ? styles.alignStart : styles.alignEnd,
+            ]}
+          >
+            <Text style={[
+              GlobalStyles.title,
+              styles.linkText,
+              // right-aligned text gets less padding to sit closer to the edge
+              index % 2 !== 0 ? styles.linkTextRight : styles.linkTextLeft,
+            ]}>{item.name}</Text>
+          </View>
+        ))}
+      </View>
+    </View>
   );
 }
 
 const styles = StyleSheet.create({
-  container: {
-    display: 'flex',
-    flexDirection: 'column',
-    alignItems: 'center',
-    justifyContent: 'center',
-    minHeight: '22vh',
-    cursor: 'pointer',
+  fullScreen: {
+    flex: 1,
+    width: windowWidth,
+    height: windowHeight,
+    backgroundColor: '#F5F0E8', // cream/beige background from the design
+    position: 'relative',
     overflow: 'hidden',
-    // margin: '0 auto',
-    margin: '2rem',
-    borderRadius: '100%',
-    width: 'min-content',
-    
   },
 
+  // Each blob is roughly 2x bigger and still offset to bleed off the edges
+  blob1: {
+    position: 'absolute',
+    top: -120,
+    left: -100,
+    width: windowWidth * 1.2,
+    height: windowWidth * 1.2,
+    resizeMode: 'contain',
+  },
+  blob2: {
+    position: 'absolute',
+    top: windowHeight * 0.07,
+    right: -70,
+    width: windowWidth * 1.2,
+    height: windowWidth * 1.2,
+    resizeMode: 'contain',
+  },
+  blob3: {
+    position: 'absolute',
+    top: windowHeight * 0.30,
+    left: -75,
+    width: windowWidth * 1.2,
+    height: windowWidth * 1.2,
+    resizeMode: 'contain',
+  },
+  blob4: {
+    position: 'absolute',
+    top: windowHeight * 0.50,
+    right: -60,
+    width: windowWidth * 1.2,
+    height: windowWidth * 1.2,
+    resizeMode: 'contain',
+  },
 
-
+  overlayContent: {
+    flex: 1,
+    flexDirection: 'column',
+    justifyContent: 'space-evenly',
+    alignItems: 'stretch',
+    width: windowWidth,
+    height: windowHeight,
+    zIndex: 2, // sits above the blobs
+    position: 'relative',
+  },
+  container: {
+    width: '100%',
+    minHeight: 200,
+    justifyContent: 'center',
+  },
+  alignStart: {
+    alignItems: 'flex-start',
+  },
+  alignEnd: {
+    alignItems: 'flex-end',
+  },
+  linkText: {
+    color: 'white',
+    textDecorationLine: 'none',
+    fontSize: 24,
+    fontWeight: 'bold',
+  },
+  // left-side text has normal padding
+  linkTextLeft: {
+    paddingHorizontal: 32,
+  },
+  // right-side text sits closer to the edge
+  linkTextRight: {
+    paddingHorizontal: 12,
+  },
 });
