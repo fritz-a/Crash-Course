@@ -3,13 +3,14 @@
 import { useLocalSearchParams } from 'expo-router';
 import React, { useEffect, useState } from 'react';
 import { ActivityIndicator, Image, ScrollView, StyleSheet, View } from 'react-native';
-
+import { useFonts } from 'expo-font';
 import { Text } from '@/components/Themed';
 // REVIEW_URL points to review.php — our second endpoint
 import { REVIEW_URL } from '@/constants/config';
 
 // Type-safe interface matching the fields returned by review.php
 interface Review {
+  program: string;
   name: string;
   year: string;
   rating: number;
@@ -30,6 +31,10 @@ const postImages: Record<number, any> = {
 };
 
 export default function TabTwoScreen() {
+  const [fontsLoaded] = useFonts({
+    'Poppins-Regular': require('@/assets/fonts/Poppins-Regular.ttf'),
+    'Poppins-SemiBold': require('@/assets/fonts/Poppins-SemiBold.ttf'),
+  });
   // id comes from the item tapped on Tab One
   // It will be undefined if the user navigates directly to this tab
   const { id } = useLocalSearchParams();
@@ -81,6 +86,7 @@ export default function TabTwoScreen() {
 
         {review ? (
           <>
+            <Text style={styles.program}>{review.program}</Text>
             <Text style={styles.title}>{review.name}</Text>
             <Text style={styles.label}>Year: <Text>{review.year}</Text></Text>
             <Text style={styles.label}>Rating: <Text>{review.rating}/5</Text></Text>
@@ -127,17 +133,29 @@ const styles = StyleSheet.create({
     resizeMode: 'contain',
     zIndex: 0,
   },
+
+  program: {
+    fontSize: 28,
+    fontWeight: 'bold',
+    fontFamily: 'Syne_Bold', // or 'Syne-Bold' depending on how it was loaded
+    color: '#333',
+    marginBottom: 40, // increase this if 4 isn't showing any effect
+    textAlign: 'center',
+  },
+
   title: {
     fontSize: 22,
-    fontWeight: 'bold',
+    fontFamily: 'Poppins-SemiBold',
     marginBottom: 12,
-    zIndex: 1, // text sits above the blob
   },
   label: {
     fontSize: 16,
-    fontWeight: 'bold',
+    fontFamily: 'Poppins-SemiBold',
     marginTop: 12,
     marginBottom: 4,
-    zIndex: 1,
+  },
+  body: {
+    fontSize: 14,
+    fontFamily: 'Poppins-Regular',
   },
 });
