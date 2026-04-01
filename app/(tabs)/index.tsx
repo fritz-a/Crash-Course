@@ -9,10 +9,13 @@ import {
   Image,
   View,
   StyleSheet,
-  TouchableOpacity, // lets us make items tappable
+  TouchableOpacity,
 } from 'react-native';
 
 const { width: windowWidth, height: windowHeight } = Dimensions.get('window');
+
+// screen responsiveness
+const contentWidth = windowWidth;
 
 export default function HomeScreen() {
   // We are using state to determine if we
@@ -76,79 +79,155 @@ export default function HomeScreen() {
   }
 
   return (
+    // outer wrapper centers the content on large screens
     <View style={styles.fullScreen}>
-      {/* Blobs are absolutely positioned to form the diagonal chain */}
-      <Image source={require('@/assets/images/Gradient-Blob.png')} style={styles.blob1} />
-      <Image source={require('@/assets/images/Gradient-Blob-2.png')} style={styles.blob2} />
-      <Image source={require('@/assets/images/Gradient-Blob-3.png')} style={styles.blob3} />
-      <Image source={require('@/assets/images/Gradient-Blob-4.png')} style={styles.blob4} />
+      <View style={styles.contentWrapper}>
 
-      {/* Text labels sit on top of the blobs, alternating left and right */}
-      {/* Tapping an item navigates to Tab Two and passes the item id as a param */}
-      <View style={styles.overlayContent}>
-        {posts.slice(0, 4).map((item, index) => (
-          <TouchableOpacity
-            key={item.id}
-            onPress={() => router.push({ pathname: '/(tabs)/two', params: { id: item.id } })}
-            style={[
-              styles.container,
-              index % 2 === 0 ? styles.alignStart : styles.alignEnd,
-            ]}
-          >
-            <Text style={[
-              GlobalStyles.title,
-              styles.linkText,
-              // right-aligned text gets less padding to sit closer to the edge
-              index % 2 !== 0 ? styles.linkTextRight : styles.linkTextLeft,
-            ]}>{item.name}</Text>
-          </TouchableOpacity>
-        ))}
+        {/* Header sits at the top of the screen above the blobs */}
+        <View style={styles.header}>
+          <Text style={styles.headerText}>RRC Polytech</Text>
+          <Image
+            source={require('@/assets/images/RRC-logo.png')}
+            style={styles.headerLogo}
+          />
+        </View>
+
+        {/* Blobs are absolutely positioned to form the diagonal chain */}
+        <Image source={require('@/assets/images/Gradient-Blob.png')} style={styles.blob1} />
+        <Image source={require('@/assets/images/Gradient-Blob-2.png')} style={styles.blob2} />
+        <Image source={require('@/assets/images/Gradient-Blob-3.png')} style={styles.blob3} />
+        <Image source={require('@/assets/images/Gradient-Blob-4.png')} style={styles.blob4} />
+
+        {/* Text labels sit on top of the blobs, alternating left and right */}
+        {/* Tapping an item navigates to Tab Two and passes the item id as a param */}
+        <View style={styles.overlayContent}>
+          {posts.slice(0, 4).map((item, index) => (
+            <TouchableOpacity
+              key={item.id}
+              onPress={() => router.push({ pathname: '/(tabs)/two', params: { id: item.id } })}
+              style={[
+                styles.container,
+                index % 2 === 0 ? styles.alignStart : styles.alignEnd,
+              ]}
+            >
+              <Text style={[
+                GlobalStyles.title,
+                styles.linkText,
+                // right-aligned text gets less padding to sit closer to the edge
+                index % 2 !== 0 ? styles.linkTextRight : styles.linkTextLeft,
+              ]}>{item.name}</Text>
+            </TouchableOpacity>
+          ))}
+        </View>
+
       </View>
     </View>
   );
 }
 
 const styles = StyleSheet.create({
+  // outer wrapper fills the screen and centers the content
   fullScreen: {
     flex: 1,
-    width: windowWidth,
-    height: windowHeight,
-    backgroundColor: '#F5F0E8', // cream/beige background from the design
+    backgroundColor: '#F5F0E8',
+    // remove alignItems: 'center'
+  },
+  contentWrapper: {
+    flex: 1,
+    backgroundColor: '#F5F0E8',
     position: 'relative',
     overflow: 'hidden',
   },
 
-  // Each blob is roughly 2x bigger and still offset to bleed off the edges
+  header: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    right: 0,
+    zIndex: 3,
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    paddingHorizontal: 48,
+    paddingTop: 24,
+    paddingBottom: 24,
+    backgroundColor: '#F5F0E8',
+  },
+  headerLogo: {
+    width: 36,
+    height: 36,
+    resizeMode: 'contain',
+  },
+  headerText: {
+    fontFamily: 'Syne_Bold',
+    fontSize: 28,
+    color: '#CD1041',
+  },
+
+  // Each blob is absolutely positioned to overlap in a diagonal chain
+  // blob1: {
+  //   position: 'absolute',
+  //   top: windowHeight * -0.05,
+  //   left: -130,
+  //   width: contentWidth * 1.2,
+  //   height: contentWidth * 1.2,
+  //   resizeMode: 'contain',
+  // },
+  // blob2: {
+  //   position: 'absolute',
+  //   top: windowHeight * 0.12,
+  //   right: -100,
+  //   width: contentWidth * 1.2,
+  //   height: contentWidth * 1.2,
+  //   resizeMode: 'contain',
+  // },
+  // blob3: {
+  //   position: 'absolute',
+  //   top: windowHeight * 0.32,
+  //   left: -160,
+  //   width: contentWidth * 1.3,
+  //   height: contentWidth * 1.3,
+  //   resizeMode: 'contain',
+  // },
+  // blob4: {
+  //   position: 'absolute',
+  //   top: windowHeight * 0.52,
+  //   right: -120,
+  //   width: contentWidth * 1.4,
+  //   height: contentWidth * 1.4,
+  //   resizeMode: 'contain',
+  // },
+
   blob1: {
     position: 'absolute',
-    top: -130,
-    left: -170,
-    width: windowWidth * 1.2,
-    height: windowWidth * 1.2,
+    top: '-5%',
+    left: '-30%',
+    width: '120%',
+    height: '60%',
     resizeMode: 'contain',
   },
   blob2: {
     position: 'absolute',
-    top: windowHeight * 0.07,
-    right: -110,
-    width: windowWidth * 1.2,
-    height: windowWidth * 1.2,
+    top: '12%',
+    right: '-23%',
+    width: '120%',
+    height: '60%',
     resizeMode: 'contain',
   },
   blob3: {
     position: 'absolute',
-    top: windowHeight * 0.23,
-    left: -170,
-    width: windowWidth * 1.3,
-    height: windowWidth * 1.3,
+    top: '35%',
+    left: '-35%',
+    width: '130%',
+    height: '60%',
     resizeMode: 'contain',
   },
   blob4: {
     position: 'absolute',
-    top: windowHeight * 0.48,
-    right: -100,
-    width: windowWidth * 1.2,
-    height: windowWidth * 1.2,
+    top: '58%',
+    right: '-28%',
+    width: '140%',
+    height: '60%',
     resizeMode: 'contain',
   },
 
@@ -157,14 +236,13 @@ const styles = StyleSheet.create({
     flexDirection: 'column',
     justifyContent: 'space-evenly',
     alignItems: 'stretch',
-    width: windowWidth,
-    height: windowHeight,
-    zIndex: 2, // sits above the blobs
+    zIndex: 2,
     position: 'relative',
+    paddingTop: 80,
   },
   container: {
     width: '100%',
-    minHeight: 200,
+    minHeight: 150,
     justifyContent: 'center',
   },
   alignStart: {
@@ -176,15 +254,15 @@ const styles = StyleSheet.create({
   linkText: {
     color: 'white',
     textDecorationLine: 'none',
-    fontSize: 24,
+    fontSize: windowWidth * 0.06, // scales with screen width
     fontWeight: 'bold',
   },
   // left-side text has normal padding
   linkTextLeft: {
-    paddingHorizontal: 32,
+    paddingLeft: '8%',
   },
-  // right-side text sits closer to the edge
+  // right-side text uses percentage padding so it scales with screen width
   linkTextRight: {
-    paddingHorizontal: 20,
+    paddingRight: '5%',
   },
 });
