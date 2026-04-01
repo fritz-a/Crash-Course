@@ -164,40 +164,6 @@ const styles = StyleSheet.create({
     color: '#CD1041',
   },
 
-  // Each blob is absolutely positioned to overlap in a diagonal chain
-  // blob1: {
-  //   position: 'absolute',
-  //   top: windowHeight * -0.05,
-  //   left: -130,
-  //   width: contentWidth * 1.2,
-  //   height: contentWidth * 1.2,
-  //   resizeMode: 'contain',
-  // },
-  // blob2: {
-  //   position: 'absolute',
-  //   top: windowHeight * 0.12,
-  //   right: -100,
-  //   width: contentWidth * 1.2,
-  //   height: contentWidth * 1.2,
-  //   resizeMode: 'contain',
-  // },
-  // blob3: {
-  //   position: 'absolute',
-  //   top: windowHeight * 0.32,
-  //   left: -160,
-  //   width: contentWidth * 1.3,
-  //   height: contentWidth * 1.3,
-  //   resizeMode: 'contain',
-  // },
-  // blob4: {
-  //   position: 'absolute',
-  //   top: windowHeight * 0.52,
-  //   right: -120,
-  //   width: contentWidth * 1.4,
-  //   height: contentWidth * 1.4,
-  //   resizeMode: 'contain',
-  // },
-
   blob1: {
     position: 'absolute',
     top: '-5%',
@@ -254,7 +220,7 @@ const styles = StyleSheet.create({
   linkText: {
     color: 'white',
     textDecorationLine: 'none',
-    fontSize: windowWidth * 0.06, // scales with screen width
+    fontSize: windowWidth * 0.05, // scales with screen width
     fontWeight: 'bold',
   },
   // left-side text has normal padding
