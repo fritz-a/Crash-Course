@@ -7,12 +7,11 @@ import { useClientOnlyValue } from '@/components/useClientOnlyValue';
 import { useColorScheme } from '@/components/useColorScheme';
 import Colors from '@/constants/Colors';
 
-// You can explore the built-in icon families and icons on the web at https://icons.expo.fyi/
 function TabBarIcon(props: {
   name: React.ComponentProps<typeof FontAwesome>['name'];
   color: string;
 }) {
-  return <FontAwesome size={28} style={{ marginBottom: -3 }} {...props} />;
+  return <FontAwesome size={22} style={{ marginBottom: -3 }} {...props} />;
 }
 
 export default function TabLayout() {
@@ -21,15 +20,38 @@ export default function TabLayout() {
   return (
     <Tabs
       screenOptions={{
-        tabBarActiveTintColor: Colors[colorScheme ?? 'light'].tint,
-        // Disable the static render of the header on web
-        // to prevent a hydration error in React Navigation v6.
+        // active icon/text color matches your blob accent
+        tabBarActiveTintColor: '#E8837A',
+        // inactive is a muted version of your text color
+        tabBarInactiveTintColor: '#B0A99A',
+        tabBarStyle: {
+          backgroundColor: '#F5F0E8', // matches your app background
+          borderTopWidth: 0,          // removes the default border line
+          elevation: 0,               // removes shadow on Android
+          shadowOpacity: 0,           // removes shadow on iOS
+          height: 60,
+          paddingBottom: 8,
+        },
+        tabBarLabelStyle: {
+          fontFamily: 'Poppins-Regular',
+          fontSize: 11,
+        },
+        headerStyle: {
+          backgroundColor: '#F5F0E8', // matches app background
+          shadowOpacity: 0,           // removes header shadow on iOS
+          elevation: 0,               // removes header shadow on Android
+        },
+        headerTitleStyle: {
+          fontFamily: 'Syne_Bold',
+          color: '#333',
+        },
         headerShown: useClientOnlyValue(false, true),
       }}>
       <Tabs.Screen
         name="index"
         options={{
-          title: 'Tab One',
+          title: 'Home',
+          headerShown: false, // hides the header on Tab One so blobs aren't pushed down
           tabBarIcon: ({ color }) => <TabBarIcon name="home" color={color} />,
           headerRight: () => (
             <Link href="/modal" asChild>
@@ -38,7 +60,7 @@ export default function TabLayout() {
                   <FontAwesome
                     name="info-circle"
                     size={25}
-                    color={Colors[colorScheme ?? 'light'].text}
+                    color='#333'
                     style={{ marginRight: 15, opacity: pressed ? 0.5 : 1 }}
                   />
                 )}
@@ -50,8 +72,8 @@ export default function TabLayout() {
       <Tabs.Screen
         name="two"
         options={{
-          title: 'Tab Two',
-          tabBarIcon: ({ color }) => <TabBarIcon name="code" color={color} />,
+          title: 'Program Review',
+          tabBarIcon: ({ color }) => <TabBarIcon name="book" color={color} />,
         }}
       />
       <Tabs.Screen

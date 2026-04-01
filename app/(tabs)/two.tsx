@@ -46,6 +46,22 @@ export default function TabTwoScreen() {
   // loading starts false here because we only fetch when an id arrives
   const [loading, setLoading] = useState(false);
 
+  // Convert the numeric rating to filled and empty stars
+  // src: https://stackoverflow.com/questions/76305480/react-star-rating
+  const renderStars = (rating: number) => {
+    const filled = '★'.repeat(rating);
+    const empty = '☆'.repeat(5 - rating);
+    return filled + empty;
+  };
+
+  // Map each post id to its corresponding blob color
+  const postColors: Record<number, string> = {
+    1: '#E8837A', // red/coral for blob 1
+    2: '#7EB3E8', // blue for blob 2
+    3: '#9B7AE8', // purple for blob 3
+    4: '#E8B87A', // orange for blob 4
+  };
+
   // useEffect runs whenever "id" changes
   // So every time a new item is tapped on Tab One, this re-runs
   useEffect(() => {
@@ -67,6 +83,7 @@ export default function TabTwoScreen() {
       } finally {
         setLoading(false);
       }
+
     };
 
     fetchReview();
@@ -89,7 +106,10 @@ export default function TabTwoScreen() {
             <Text style={styles.program}>{review.program}</Text>
             <Text style={styles.title}>{review.name}</Text>
             <Text style={styles.label}>Year: <Text>{review.year}</Text></Text>
-            <Text style={styles.label}>Rating: <Text>{review.rating}/5</Text></Text>
+            <Text style={styles.label}>Rating</Text>
+            <Text style={[styles.stars, { color: postColors[Number(id)] }]}>
+              {renderStars(review.rating)}
+            </Text>
             <Text style={styles.label}>Overview</Text>
             <Text>{review.overview}</Text>
             <Text style={styles.label}>Favourite Part</Text>
@@ -132,6 +152,13 @@ const styles = StyleSheet.create({
     height: 400,
     resizeMode: 'contain',
     zIndex: 0,
+  },
+
+  stars: {
+    fontSize: 28,
+    color: '#FFB800', // golden yellow
+    marginBottom: 4,
+    fontFamily: 'Poppins-Regular',
   },
 
   program: {
