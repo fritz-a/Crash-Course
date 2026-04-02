@@ -111,17 +111,17 @@ export default function TabTwoScreen() {
               {renderStars(review.rating)}
             </Text>
             <Text style={styles.label}>Overview</Text>
-            <Text>{review.overview}</Text>
+            <Text style={styles.body}>{review.overview}</Text>
             <Text style={styles.label}>Favourite Part</Text>
-            <Text>{review['favourite part']}</Text>
+            <Text style={styles.body}>{review['favourite part']}</Text>
             <Text style={styles.label}>Biggest Challenge</Text>
-            <Text>{review.challenge}</Text>
+            <Text style={styles.body}>{review.challenge}</Text>
             <Text style={styles.label}>Is there anything you wish you knew before entering this program?</Text>
-            <Text>{review['wished you would have known']}</Text>
+            <Text style={styles.body}>{review['wished you would have known']}</Text>
             <Text style={styles.label}>What type of job are you hoping to pursue after graduation?</Text>
-            <Text>{review['career after graduating']}</Text>
+            <Text style={styles.body}>{review['career after graduating']}</Text>
             <Text style={styles.label}>Advice for Future Students</Text>
-            <Text>{review.advice}</Text>
+            <Text style={styles.body}>{review.advice}</Text>
           </>
         ) : (
           <Text style={styles.title}>Select an item from Tab One</Text>
@@ -178,11 +178,13 @@ const styles = StyleSheet.create({
   label: {
     fontSize: 16,
     fontFamily: 'Poppins-SemiBold',
-    marginTop: 12,
-    marginBottom: 4,
+    marginTop: 10,
+    marginBottom: 6,
   },
   body: {
     fontSize: 14,
     fontFamily: 'Poppins-Regular',
+    lineHeight: 22,
+    marginBottom: 16,
   },
 });
