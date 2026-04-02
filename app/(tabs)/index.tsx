@@ -22,6 +22,7 @@ export default function HomeScreen() {
   const [posts, setPosts] = useState<{ id: number; name: string }[]>([]);
 
   // one animated value per blob, all starting at scale 1
+  // spring source: https://reactnative.dev/docs/animated
   const blobScales = useState(() => [
     new Animated.Value(1),
     new Animated.Value(1),
