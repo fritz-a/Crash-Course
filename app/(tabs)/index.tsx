@@ -9,19 +9,17 @@ import {
   Image,
   View,
   StyleSheet,
-  TouchableOpacity,
+  Pressable,
 } from 'react-native';
 
-const { width: windowWidth, height: windowHeight } = Dimensions.get('window');
-
-// screen responsiveness
-const contentWidth = windowWidth;
+const { width: windowWidth } = Dimensions.get('window');
 
 export default function HomeScreen() {
   // We are using state to determine if we
   // show the indicator (true/yes by default)
   const [loading, setLoading] = useState(true);
   const [posts, setPosts] = useState<{ id: number; name: string }[]>([]);
+  const [activeId, setActiveId] = useState<number | null>(null);
 
   useEffect(() => {
     // useEffect takes two parameters/arguments
@@ -79,31 +77,45 @@ export default function HomeScreen() {
   }
 
   return (
-    // outer wrapper centers the content on large screens
     <View style={styles.fullScreen}>
       <View style={styles.contentWrapper}>
 
         {/* Header sits at the top of the screen above the blobs */}
         <View style={styles.header}>
-          <Text style={styles.headerText}>RRC Polytech</Text>
           <Image
-            source={require('@/assets/images/RRC-logo.png')}
+            source={require('@/assets/images/cc-logo-word.png')}
             style={styles.headerLogo}
           />
+          <Text style={styles.headerSubtext}>Your Institution: RRC Polytech</Text>
         </View>
 
-        {/* Blobs are absolutely positioned to form the diagonal chain */}
-        <Image source={require('@/assets/images/Gradient-Blob.png')} style={styles.blob1} />
-        <Image source={require('@/assets/images/Gradient-Blob-2.png')} style={styles.blob2} />
-        <Image source={require('@/assets/images/Gradient-Blob-3.png')} style={styles.blob3} />
-        <Image source={require('@/assets/images/Gradient-Blob-4.png')} style={styles.blob4} />
+        {/* Blobs are absolutely positioned to form the alternating look*/}
+        {/* When an item is pressed its blob scales up, the other blobs stay the same */}
+        <Image
+          source={require('@/assets/images/Gradient-Blob.png')}
+          style={[styles.blob1, { transform: [{ scale: activeId === 1 ? 1.2 : 1 }] }]}
+        />
+        <Image
+          source={require('@/assets/images/Gradient-Blob-2.png')}
+          style={[styles.blob2, { transform: [{ scale: activeId === 2 ? 1.2 : 1 }] }]}
+        />
+        <Image
+          source={require('@/assets/images/Gradient-Blob-3.png')}
+          style={[styles.blob3, { transform: [{ scale: activeId === 3 ? 1.2 : 1 }] }]}
+        />
+        <Image
+          source={require('@/assets/images/Gradient-Blob-4.png')}
+          style={[styles.blob4, { transform: [{ scale: activeId === 4 ? 1.2 : 1 }] }]}
+        />
 
         {/* Text labels sit on top of the blobs, alternating left and right */}
         {/* Tapping an item navigates to Tab Two and passes the item id as a param */}
         <View style={styles.overlayContent}>
           {posts.slice(0, 4).map((item, index) => (
-            <TouchableOpacity
+            <Pressable
               key={item.id}
+              onPressIn={() => setActiveId(item.id)}
+              onPressOut={() => setActiveId(null)}
               onPress={() => router.push({ pathname: '/(tabs)/two', params: { id: item.id } })}
               style={[
                 styles.container,
@@ -111,12 +123,10 @@ export default function HomeScreen() {
               ]}
             >
               <Text style={[
-                GlobalStyles.title,
                 styles.linkText,
-                // right-aligned text gets less padding to sit closer to the edge
                 index % 2 !== 0 ? styles.linkTextRight : styles.linkTextLeft,
               ]}>{item.name}</Text>
-            </TouchableOpacity>
+            </Pressable>
           ))}
         </View>
 
@@ -126,11 +136,10 @@ export default function HomeScreen() {
 }
 
 const styles = StyleSheet.create({
-  // outer wrapper fills the screen and centers the content
+  // outer wrapper fills the screen
   fullScreen: {
     flex: 1,
     backgroundColor: '#F5F0E8',
-    // remove alignItems: 'center'
   },
   contentWrapper: {
     flex: 1,
@@ -139,31 +148,34 @@ const styles = StyleSheet.create({
     overflow: 'hidden',
   },
 
+  // header stacks logo and subtext vertically, centered
   header: {
     position: 'absolute',
     top: 0,
     left: 0,
     right: 0,
     zIndex: 3,
-    flexDirection: 'row',
+    flexDirection: 'column',
     alignItems: 'center',
-    justifyContent: 'space-between',
-    paddingHorizontal: 48,
-    paddingTop: 24,
-    paddingBottom: 24,
+    paddingHorizontal: 24,
+    paddingTop: 15,
+    paddingBottom: 15,
     backgroundColor: '#F5F0E8',
   },
+  // logo and wordmark are a single image, you can change the scale by adjusting the width
   headerLogo: {
-    width: 36,
-    height: 36,
+    width: 300,
+    height: 60,
     resizeMode: 'contain',
+    marginBottom: 4,
   },
-  headerText: {
+  headerSubtext: {
     fontFamily: 'Syne_Bold',
-    fontSize: 28,
+    fontSize: 20,
     color: '#CD1041',
   },
 
+  // Each blob uses percentage positioning so it scales with screen size
   blob1: {
     position: 'absolute',
     top: '-5%',
@@ -197,6 +209,7 @@ const styles = StyleSheet.create({
     resizeMode: 'contain',
   },
 
+  // the text is technically overlay content because of the blobs
   overlayContent: {
     flex: 1,
     flexDirection: 'column',
@@ -220,14 +233,16 @@ const styles = StyleSheet.create({
   linkText: {
     color: 'white',
     textDecorationLine: 'none',
-    fontSize: windowWidth * 0.05, // scales with screen width
+    fontSize: windowWidth * 0.06,
     fontWeight: 'bold',
+    fontFamily: 'Syne_Bold',
+    width: 250,
   },
-  // left-side text has normal padding
+ 
   linkTextLeft: {
     paddingLeft: '8%',
   },
-  // right-side text uses percentage padding so it scales with screen width
+  
   linkTextRight: {
     paddingRight: '5%',
   },
