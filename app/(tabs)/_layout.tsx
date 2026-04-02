@@ -1,5 +1,5 @@
 import FontAwesome from '@expo/vector-icons/FontAwesome';
-import { Link, Tabs } from 'expo-router';
+import { Link, Tabs, useRouter } from 'expo-router';
 import React from 'react';
 import { Pressable } from 'react-native';
 
@@ -16,6 +16,7 @@ function TabBarIcon(props: {
 
 export default function TabLayout() {
   const colorScheme = useColorScheme();
+  const router = useRouter();
 
   return (
     <Tabs
@@ -73,7 +74,23 @@ export default function TabLayout() {
         name="two"
         options={{
           title: 'Reviews',
+          headerTitleAlign: 'center',
+          headerTitleStyle: {
+            fontSize: 28,
+            fontFamily: 'Syne_Bold',
+            color: '#000000',
+          },
           tabBarIcon: ({ color }) => <TabBarIcon name="book" color={color} />,
+          // React Navigation headerleft
+          // https://reactnavigation.org/docs/native-stack-navigator/#headerleft
+          headerLeft: () => (
+            <Pressable
+            // Expo Router back navigation
+            // https://docs.expo.dev/versions/latest/sdk/router/#router
+             onPress={() => router.back()} style={{ marginLeft: 15,  marginRight: 10 }}>
+              <FontAwesome name="chevron-left" size={22} color="#000000" />
+            </Pressable>
+          ),
         }}
       />
       
