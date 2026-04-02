@@ -3,10 +3,10 @@ import FontAwesome from '@expo/vector-icons/FontAwesome';
 import { DarkTheme, DefaultTheme, ThemeProvider } from '@react-navigation/native';
 import { useFonts } from 'expo-font';
 import { Stack } from 'expo-router';
-import * as SplashScreen from 'expo-splash-screen';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import 'react-native-reanimated';
 
+import StartupLoader from '@/components/StartupLoader';
 import { useColorScheme } from '@/components/useColorScheme';
 
 export {
@@ -19,9 +19,6 @@ export const unstable_settings = {
   initialRouteName: '(tabs)',
 };
 
-// Prevent the splash screen from auto-hiding before asset loading is complete.
-SplashScreen.preventAutoHideAsync();
-
 export default function RootLayout() {
   const [loaded, error] = useFonts({
     SpaceMono: require('../assets/fonts/SpaceMono-Regular.ttf'),
@@ -30,6 +27,7 @@ export default function RootLayout() {
     Inter_400Regular,
     Syne_Bold: require('../assets/fonts/Syne-Bold.ttf'),
   });
+  const [minDelayPassed, setMinDelayPassed] = useState(false);
 
   // Expo Router uses Error Boundaries to catch errors in the navigation tree.
   useEffect(() => {
@@ -37,13 +35,15 @@ export default function RootLayout() {
   }, [error]);
 
   useEffect(() => {
-    if (loaded) {
-      SplashScreen.hideAsync();
-    }
-  }, [loaded]);
+    const timer = setTimeout(() => {
+      setMinDelayPassed(true);
+    }, 1200);
 
-  if (!loaded) {
-    return null;
+    return () => clearTimeout(timer);
+  }, []);
+
+  if (!loaded || !minDelayPassed) {
+    return <StartupLoader />;
   }
 
   return <RootLayoutNav />;
