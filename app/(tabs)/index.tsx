@@ -1,11 +1,12 @@
-import { GlobalStyles } from '@/components/Styles';
 import { Text } from '@/components/Themed';
 import { API_URL } from '@/constants/config';
 import { router } from 'expo-router';
 import { useEffect, useState } from 'react';
 import {
   ActivityIndicator,
+  Animated,
   Dimensions,
+  FlatList,
   Image,
   View,
   StyleSheet,
@@ -19,7 +20,15 @@ export default function HomeScreen() {
   // show the indicator (true/yes by default)
   const [loading, setLoading] = useState(true);
   const [posts, setPosts] = useState<{ id: number; name: string }[]>([]);
-  const [activeId, setActiveId] = useState<number | null>(null);
+
+  // one animated value per blob, all starting at scale 1
+  // spring source: https://reactnative.dev/docs/animated
+  const blobScales = useState(() => [
+    new Animated.Value(1),
+    new Animated.Value(1),
+    new Animated.Value(1),
+    new Animated.Value(1),
+  ])[0];
 
   useEffect(() => {
     // useEffect takes two parameters/arguments
@@ -69,12 +78,43 @@ export default function HomeScreen() {
     fetchPost();
   }, []);
 
+  // animate the pressed blob up, and spring it back on release
+  // index matches the blob to the post item (0 = blob1, 1 = blob2, etc.)
+  const animateBlob = (index: number, toValue: number) => {
+    Animated.spring(blobScales[index], {
+      toValue,
+      useNativeDriver: true, 
+      friction: 4,           
+      tension: 40,         
+    }).start();
+  };
+
   // if our loading state variable is "true"
   // Return our loading indicator
   if (loading) {
     return <ActivityIndicator />;
     // if we return here, nothing below this point runs
   }
+
+  // renderItem is the function FlatList calls for each item in the list
+  // it receives the item and its index destructured from the info object
+  const renderItem = ({ item, index }: { item: { id: number; name: string }; index: number }) => (
+    <Pressable
+      onPressIn={() => animateBlob(index, 1.2)}  
+      onPressOut={() => animateBlob(index, 1)}  
+      onPress={() => router.push({ pathname: '/(tabs)/two', params: { id: item.id } })}
+      style={[
+        styles.container,
+        index % 2 === 0 ? styles.alignStart : styles.alignEnd,
+      ]}
+    >
+      <Text style={[
+        styles.linkText,
+        // right-aligned text gets less padding to sit closer to the edge
+        index % 2 !== 0 ? styles.linkTextRight : styles.linkTextLeft,
+      ]}>{item.name}</Text>
+    </Pressable>
+  );
 
   return (
     <View style={styles.fullScreen}>
@@ -86,49 +126,37 @@ export default function HomeScreen() {
             source={require('@/assets/images/cc-logo-word.png')}
             style={styles.headerLogo}
           />
-          <Text style={styles.headerSubtext}>Your Institution: RRC Polytech</Text>
+  
         </View>
 
-        {/* Blobs are absolutely positioned to form the alternating look*/}
-        {/* When an item is pressed its blob scales up, the other blobs stay the same */}
-        <Image
+        {/* Blobs use Animated.Image so they can be scaled with spring animation */}
+        {/* Each blob is tied to its blobScales value by index */}
+        <Animated.Image
           source={require('@/assets/images/Gradient-Blob.png')}
-          style={[styles.blob1, { transform: [{ scale: activeId === 1 ? 1.2 : 1 }] }]}
+          style={[styles.blob1, { transform: [{ scale: blobScales[0] }] }]}
         />
-        <Image
+        <Animated.Image
           source={require('@/assets/images/Gradient-Blob-2.png')}
-          style={[styles.blob2, { transform: [{ scale: activeId === 2 ? 1.2 : 1 }] }]}
+          style={[styles.blob2, { transform: [{ scale: blobScales[1] }] }]}
         />
-        <Image
+        <Animated.Image
           source={require('@/assets/images/Gradient-Blob-3.png')}
-          style={[styles.blob3, { transform: [{ scale: activeId === 3 ? 1.2 : 1 }] }]}
+          style={[styles.blob3, { transform: [{ scale: blobScales[2] }] }]}
         />
-        <Image
+        <Animated.Image
           source={require('@/assets/images/Gradient-Blob-4.png')}
-          style={[styles.blob4, { transform: [{ scale: activeId === 4 ? 1.2 : 1 }] }]}
+          style={[styles.blob4, { transform: [{ scale: blobScales[3] }] }]}
         />
 
-        {/* Text labels sit on top of the blobs, alternating left and right */}
-        {/* Tapping an item navigates to Tab Two and passes the item id as a param */}
-        <View style={styles.overlayContent}>
-          {posts.slice(0, 4).map((item, index) => (
-            <Pressable
-              key={item.id}
-              onPressIn={() => setActiveId(item.id)}
-              onPressOut={() => setActiveId(null)}
-              onPress={() => router.push({ pathname: '/(tabs)/two', params: { id: item.id } })}
-              style={[
-                styles.container,
-                index % 2 === 0 ? styles.alignStart : styles.alignEnd,
-              ]}
-            >
-              <Text style={[
-                styles.linkText,
-                index % 2 !== 0 ? styles.linkTextRight : styles.linkTextLeft,
-              ]}>{item.name}</Text>
-            </Pressable>
-          ))}
-        </View>
+        {/* FlatList renders each post as a tappable text label */}
+        {/* It only renders visible items, making it more efficient than .map() */}
+        <FlatList
+          data={posts.slice(0, 4)}
+          keyExtractor={(item) => item.id.toString()}
+          renderItem={renderItem}
+          contentContainerStyle={styles.overlayContent}
+          scrollEnabled={false} 
+        />
 
       </View>
     </View>
@@ -162,7 +190,6 @@ const styles = StyleSheet.create({
     paddingBottom: 15,
     backgroundColor: '#F5F0E8',
   },
-  // logo and wordmark are a single image, you can change the scale by adjusting the width
   headerLogo: {
     width: 300,
     height: 60,
@@ -209,14 +236,9 @@ const styles = StyleSheet.create({
     resizeMode: 'contain',
   },
 
-  // the text is technically overlay content because of the blobs
   overlayContent: {
     flex: 1,
-    flexDirection: 'column',
     justifyContent: 'space-evenly',
-    alignItems: 'stretch',
-    zIndex: 2,
-    position: 'relative',
     paddingTop: 80,
   },
   container: {
@@ -233,7 +255,7 @@ const styles = StyleSheet.create({
   linkText: {
     color: 'white',
     textDecorationLine: 'none',
-    fontSize: windowWidth * 0.06,
+    fontSize: windowWidth * 0.06, 
     fontWeight: 'bold',
     fontFamily: 'Syne_Bold',
     width: 250,
