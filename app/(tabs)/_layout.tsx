@@ -77,20 +77,26 @@ export default function TabLayout() {
           headerTitle: () => {
             const params = route.params as Record<string, unknown> | undefined;
             const programName = typeof params?.programName === 'string' ? params.programName : '';
+            const isLongProgramName = programName === 'Interaction Design and Development';
+            const displayProgramName =
+              isLongProgramName
+                ? 'Interaction Design & Dev'
+                : programName;
 
             return (
               <View style={{ alignItems: 'center' }}>
-                {programName ? (
+                {displayProgramName ? (
                   <Text
                     style={{
-                      fontSize: 22,
+                      fontSize: 18,
                       fontFamily: 'Syne_Bold',
                       color: '#000000',
                       lineHeight: 24,
                     }}
-                    numberOfLines={1}
+                    numberOfLines={isLongProgramName ? 1 : undefined}
+                    ellipsizeMode="tail"
                   >
-                    {programName}
+                    {displayProgramName}
                   </Text>
                 ) : null}
                 <Text style={{ fontSize: 16, fontFamily: 'Poppins-Regular', color: '#565454', fontWeight: '200', lineHeight: 18 }}>
