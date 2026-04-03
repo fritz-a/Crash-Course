@@ -80,23 +80,22 @@ export default function TabLayout() {
 
             return (
               <View style={{ alignItems: 'center' }}>
-                <Text style={{ fontSize: 22, fontFamily: 'Syne_Bold', color: '#000000' }}>
-                  Reviews
-                </Text>
                 {programName ? (
                   <Text
                     style={{
-                      fontSize: 14,
-                      fontFamily: 'Poppins-SemiBold',
-                      color: '#0c0c0c',
-                      fontWeight: '200',
-                      marginTop: 0,
+                      fontSize: 22,
+                      fontFamily: 'Syne_Bold',
+                      color: '#000000',
+                      lineHeight: 24,
                     }}
                     numberOfLines={1}
                   >
                     {programName}
                   </Text>
                 ) : null}
+                <Text style={{ fontSize: 16, fontFamily: 'Poppins-Regular', color: '#565454', fontWeight: '200', lineHeight: 18 }}>
+                  Reviews
+                </Text>
               </View>
             );
           },
