@@ -35,4 +35,23 @@ body {
   body {
     background-color: #000;
   }
+}
+  // {/* https://developer.mozilla.org/en-US/docs/Web/CSS/animation adapted with chatgpt */}
+@keyframes blobDrift {
+  0%   { transform: translate(70px, 50px); }
+  10%  { transform: translate(57px, 79px); }
+  20%  { transform: translate(22px, 98px); }
+  25%  { transform: translate(0px, 100px); }
+  30%  { transform: translate(-22px, 98px); }
+  40%  { transform: translate(-57px, 79px); }
+  50%  { transform: translate(-70px, 50px); }
+  60%  { transform: translate(-57px, 21px); }
+  70%  { transform: translate(-22px, 2px); }
+  75%  { transform: translate(0px, 0px); }
+  80%  { transform: translate(22px, 2px); }
+  90%  { transform: translate(57px, 21px); }
+  100% { transform: translate(70px, 50px); }
+}
+.blob-float {
+  animation: blobDrift 25s linear infinite;
 }`;

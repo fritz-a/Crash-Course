@@ -1,8 +1,8 @@
 // useLocalSearchParams reads URL params passed via router.push()
 // When Tab One calls router.push({ params: { id: item.id } }), we catch it here
 import { router, useLocalSearchParams } from 'expo-router';
-import React, { useEffect, useState } from 'react';
-import { ActivityIndicator, Image, Pressable, ScrollView, StyleSheet, View } from 'react-native';
+import React, { useEffect, useRef, useState } from 'react';
+import { ActivityIndicator, Image, Platform, Pressable, ScrollView, StyleSheet, View } from 'react-native';
 import { useFonts } from 'expo-font';
 import { Text } from '@/components/Themed';
 // REVIEW_URL points to review.php
@@ -45,6 +45,16 @@ export default function TabTwoScreen() {
 
   // loading starts false here because we only fetch when an id arrives
   const [loading, setLoading] = useState(false);
+
+  {/* https://developer.mozilla.org/en-US/docs/Web/CSS/animation adapted with chatgpt */}
+  const blobRef = useRef<View>(null);
+
+  useEffect(() => {
+    if (Platform.OS === 'web' && blobRef.current) {
+      const node = blobRef.current as unknown as HTMLElement;
+      node.style.animation = 'blobDrift 25s linear infinite';
+    }
+  });
 
   // handles the home button on first app load if user clicks the review button
   const handleGoHome = () => {
@@ -107,10 +117,13 @@ export default function TabTwoScreen() {
       <ScrollView contentContainerStyle={styles.container}>
 
         {/* Blob sits at the top behind the text */}
-        <Image
-          source={postImages[Number(id)]}
-          style={styles.postImage}
-        />
+        {/* https://developer.mozilla.org/en-US/docs/Web/CSS/animation adapted with chatgpt */}
+        <View ref={blobRef} style={styles.postImage}>
+          <Image
+            source={postImages[Number(id)]}
+            style={{ width: '100%', height: '100%', resizeMode: 'contain' }}
+          />
+        </View>
 
         {review ? (
           <>
