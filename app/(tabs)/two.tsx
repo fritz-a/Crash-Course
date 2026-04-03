@@ -1,11 +1,11 @@
 // useLocalSearchParams reads URL params passed via router.push()
 // When Tab One calls router.push({ params: { id: item.id } }), we catch it here
-import { useLocalSearchParams } from 'expo-router';
+import { router, useLocalSearchParams } from 'expo-router';
 import React, { useEffect, useState } from 'react';
-import { ActivityIndicator, Image, ScrollView, StyleSheet, View } from 'react-native';
+import { ActivityIndicator, Image, Pressable, ScrollView, StyleSheet, View } from 'react-native';
 import { useFonts } from 'expo-font';
 import { Text } from '@/components/Themed';
-// REVIEW_URL points to review.php — our second endpoint
+// REVIEW_URL points to review.php
 import { REVIEW_URL } from '@/constants/config';
 
 // Type-safe interface matching the fields returned by review.php
@@ -46,6 +46,11 @@ export default function TabTwoScreen() {
   // loading starts false here because we only fetch when an id arrives
   const [loading, setLoading] = useState(false);
 
+  // handles the home button on first app load if user clicks the review button
+  const handleGoHome = () => {
+    router.push('/');
+  };
+
   // Convert the numeric rating to filled and empty stars
   // src: https://stackoverflow.com/questions/76305480/react-star-rating
   const renderStars = (rating: number) => {
@@ -62,21 +67,21 @@ export default function TabTwoScreen() {
     4: '#E8B87A', // orange for blob 4
   };
 
-  // useEffect runs whenever "id" changes
-  // So every time a new item is tapped on Tab One, this re-runs
+  // This runs when ID changes which is what happens when a user taps a program on tab one
+  // Copilot assisted
   useEffect(() => {
-    // If there's no id (user opened tab directly), do nothing
+    // If there is no ID to grab, it stops. Safety guard.
     if (!id) return;
 
     setLoading(true);
+    // make a function to get a review from API
     const fetchReview = async () => {
       try {
-        // Append ?id=X to the URL so review.php knows which item to look up
-        // This is the same as typing review.php?id=1 in a browser
+        // Turn the API content into JSON
         const response = await fetch(`${REVIEW_URL}?id=${id}`);
         const data: Review = await response.json();
         console.log('API data:', data);
-        // Store the parsed object directly — no stringify needed
+        // Save the review so it shows up
         setReview(data);
       } catch (error) {
         console.log('Fetch error', error);
@@ -87,7 +92,7 @@ export default function TabTwoScreen() {
     };
 
     fetchReview();
-  }, [id]); // <-- [id] is the dependency — re-run this effect when id changes
+  }, [id]); // <-- selecting another item fetches the new review
 
   if (loading) return <ActivityIndicator />;
 
@@ -104,7 +109,7 @@ export default function TabTwoScreen() {
         {review ? (
           <>
             <Text style={styles.program}>{review.program}</Text>
-            <Text style={styles.title}>{review.name}</Text>
+            <Text style={styles.reviewTitle}>{review.name}</Text>
             <Text style={styles.label}>Year: <Text>{review.year}</Text></Text>
             <Text style={styles.label}>Rating</Text>
             <Text style={[styles.stars, { color: postColors[Number(id)] }]}>
@@ -124,7 +129,12 @@ export default function TabTwoScreen() {
             <Text style={styles.body}>{review.advice}</Text>
           </>
         ) : (
-          <Text style={styles.title}>Select an item from Tab One</Text>
+          <View style={styles.emptyState}>
+            <Text style={styles.emptyTitle}>Select a program to read reviews.</Text>
+            <Pressable style={styles.ctaButton} onPress={handleGoHome}>
+              <Text style={styles.ctaButtonText}>View Programs</Text>
+            </Pressable>
+          </View>
         )}
       </ScrollView>
     </View>
@@ -142,6 +152,11 @@ const styles = StyleSheet.create({
     paddingTop: 20,
     backgroundColor: 'transparent',
     flexGrow: 1,
+  },
+  emptyState: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   // blob is absolute so text flows on top of it
   postImage: {
@@ -170,10 +185,16 @@ const styles = StyleSheet.create({
     textAlign: 'center',
   },
 
-  title: {
+  reviewTitle: {
     fontSize: 22,
     fontFamily: 'Poppins-SemiBold',
     marginBottom: 12,
+  },
+  emptyTitle: {
+    fontSize: 20,
+    fontFamily: 'Poppins-SemiBold',
+    marginBottom: 12,
+    textAlign: 'center',
   },
   label: {
     fontSize: 16,
@@ -186,5 +207,19 @@ const styles = StyleSheet.create({
     fontFamily: 'Poppins-Regular',
     lineHeight: 22,
     marginBottom: 16,
+  },
+  ctaButton: {
+    marginTop: 6,
+    alignSelf: 'center',
+    backgroundColor: '#E8837A',
+    paddingVertical: 10,
+    paddingHorizontal: 16,
+    borderRadius: 8,
+  },
+  ctaButtonText: {
+    color: '#ffffff',
+    fontSize: 14,
+    fontFamily: 'Poppins-SemiBold',
+    textAlign: 'center',
   },
 });
