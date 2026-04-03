@@ -21,7 +21,6 @@ export default function TabLayout() {
   return (
     <Tabs
       screenOptions={{
-        // active icon/text color matches your blob accent
         tabBarActiveTintColor: '#E8837A',
         tabBarInactiveTintColor: '#B0A99A',
         tabBarStyle: {
@@ -72,17 +71,26 @@ export default function TabLayout() {
       <Tabs.Screen
         name="two"
         options={({ route }) => ({
-          // TODO: Program subtitle in header is driven by route param `programName`.
+          tabBarLabel: 'Reviews',
           headerTitleAlign: 'center',
+
+          // Assisted by copilot, builds the header title from current route params
+          // current route params is whatever value was passed when the app navigated to this screen
           headerTitle: () => {
+            // Reads params
             const params = route.params as Record<string, unknown> | undefined;
+
+            // Only use program name if it's a string
             const programName = typeof params?.programName === 'string' ? params.programName : '';
+
+            // This checks for Interaction Design and Development since it's the only title that is too long for the header
             const isLongProgramName = programName === 'Interaction Design and Development';
+            // This block shortens the title so it fits in header
             const displayProgramName =
               isLongProgramName
                 ? 'Interaction Design & Dev'
                 : programName;
-
+            // End
             return (
               <View style={{ alignItems: 'center' }}>
                 {displayProgramName ? (
@@ -93,6 +101,8 @@ export default function TabLayout() {
                       color: '#000000',
                       lineHeight: 24,
                     }}
+                    // If it's the long title then we keep it on one line and add the ... onto it
+                    // copiot assisted
                     numberOfLines={isLongProgramName ? 1 : undefined}
                     ellipsizeMode="tail"
                   >

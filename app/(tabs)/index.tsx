@@ -105,7 +105,8 @@ export default function HomeScreen() {
     <Pressable
       onPressIn={() => animateBlob(index, 1.2)}  
       onPressOut={() => animateBlob(index, 1)}  
-      // TODO: Pass selected program name so Reviews header can render a subtitle.
+      // On press, the data is sent to tab two for displaying the program title
+      // Copilot assisted
       onPress={() => router.push({ pathname: '/(tabs)/two', params: { id: item.id, programName: item.name } })}
       style={[
         styles.container,

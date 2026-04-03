@@ -83,7 +83,9 @@ export default function TabTwoScreen() {
         console.log('API data:', data);
         // Save the review so it shows up
         setReview(data);
-        // TODO: Sync programName param so tab header subtitle updates after fetch.
+        // Updates the header title with the program name from API
+        // This is a backup step for header title and keeps it in sync
+        // Copilot assisted
         if (typeof data.program === 'string' && data.program.trim()) {
           router.setParams({ programName: data.program.trim() });
         }
