@@ -45,7 +45,8 @@ export default function HomeScreen() {
         // After we have data from the fetch
         // "then" we format it as JSON
         const data = await response.json();
-
+        // this block normalizes API to be consistent such as (id, name)
+        // Copilot assisted
         if (Array.isArray(data)) {
           setPosts(
             data.map((item: any, index: number) => ({
@@ -53,6 +54,8 @@ export default function HomeScreen() {
               name: String(item?.name ?? item ?? ''),
             }))
           );
+        // API converts into id, name array
+        // Copilot assisted
         } else if (data && typeof data === 'object') {
           setPosts(
             Object.entries(data as Record<string, unknown>).map(([id, name]) => ({
@@ -111,7 +114,7 @@ export default function HomeScreen() {
       <Text style={[
         styles.linkText,
         // right-aligned text gets less padding to sit closer to the edge
-        index % 2 !== 0 ? styles.linkTextRight : styles.linkTextLeft,
+        index % 1 !== 0 ? styles.linkTextRight : styles.linkTextLeft,
       ]}>{item.name}</Text>
     </Pressable>
   );

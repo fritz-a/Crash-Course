@@ -23,10 +23,9 @@ export default function TabLayout() {
       screenOptions={{
         // active icon/text color matches your blob accent
         tabBarActiveTintColor: '#E8837A',
-        // inactive is a muted version of your text color
         tabBarInactiveTintColor: '#B0A99A',
         tabBarStyle: {
-          backgroundColor: '#F5F0E8', // matches your app background
+          backgroundColor: '#F5F0E8', 
           borderTopWidth: 0,          // removes the default border line
           elevation: 0,               // removes shadow on Android
           shadowOpacity: 0,           // removes shadow on iOS
@@ -38,7 +37,7 @@ export default function TabLayout() {
           fontSize: 11,
         },
         headerStyle: {
-          backgroundColor: '#F5F0E8', // matches app background
+          backgroundColor: '#F5F0E8', 
           shadowOpacity: 0,           // removes header shadow on iOS
           elevation: 0,               // removes header shadow on Android
         },
