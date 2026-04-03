@@ -1,7 +1,7 @@
 import FontAwesome from '@expo/vector-icons/FontAwesome';
 import { Link, Tabs, useRouter } from 'expo-router';
 import React from 'react';
-import { Pressable } from 'react-native';
+import { Pressable, Text, View } from 'react-native';
 
 import { useClientOnlyValue } from '@/components/useClientOnlyValue';
 import { useColorScheme } from '@/components/useColorScheme';
@@ -71,13 +71,34 @@ export default function TabLayout() {
       />
       <Tabs.Screen
         name="two"
-        options={{
-          title: 'Reviews',
+        options={({ route }) => ({
+          // TODO: Program subtitle in header is driven by route param `programName`.
           headerTitleAlign: 'center',
-          headerTitleStyle: {
-            fontSize: 28,
-            fontFamily: 'Syne_Bold',
-            color: '#000000',
+          headerTitle: () => {
+            const params = route.params as Record<string, unknown> | undefined;
+            const programName = typeof params?.programName === 'string' ? params.programName : '';
+
+            return (
+              <View style={{ alignItems: 'center' }}>
+                <Text style={{ fontSize: 22, fontFamily: 'Syne_Bold', color: '#000000' }}>
+                  Reviews
+                </Text>
+                {programName ? (
+                  <Text
+                    style={{
+                      fontSize: 14,
+                      fontFamily: 'Poppins-SemiBold',
+                      color: '#0c0c0c',
+                      fontWeight: '200',
+                      marginTop: 0,
+                    }}
+                    numberOfLines={1}
+                  >
+                    {programName}
+                  </Text>
+                ) : null}
+              </View>
+            );
           },
           tabBarIcon: ({ color }) => <TabBarIcon name="book" color={color} />,
           // React Navigation headerleft
@@ -90,7 +111,7 @@ export default function TabLayout() {
               <FontAwesome name="chevron-left" size={22} color="#000000" />
             </Pressable>
           ),
-        }}
+        })}
       />
       
     </Tabs>

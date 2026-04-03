@@ -37,7 +37,7 @@ export default function TabTwoScreen() {
   });
   // id comes from the item tapped on Tab One
   // It will be undefined if the user navigates directly to this tab
-  const { id } = useLocalSearchParams();
+  const { id } = useLocalSearchParams<{ id?: string; programName?: string }>();
 
   // review holds the structured object from review.php
   // null means we haven't fetched yet
@@ -83,6 +83,10 @@ export default function TabTwoScreen() {
         console.log('API data:', data);
         // Save the review so it shows up
         setReview(data);
+        // TODO: Sync programName param so tab header subtitle updates after fetch.
+        if (typeof data.program === 'string' && data.program.trim()) {
+          router.setParams({ programName: data.program.trim() });
+        }
       } catch (error) {
         console.log('Fetch error', error);
       } finally {

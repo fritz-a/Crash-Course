@@ -105,7 +105,8 @@ export default function HomeScreen() {
     <Pressable
       onPressIn={() => animateBlob(index, 1.2)}  
       onPressOut={() => animateBlob(index, 1)}  
-      onPress={() => router.push({ pathname: '/(tabs)/two', params: { id: item.id } })}
+      // TODO: Pass selected program name so Reviews header can render a subtitle.
+      onPress={() => router.push({ pathname: '/(tabs)/two', params: { id: item.id, programName: item.name } })}
       style={[
         styles.container,
         index % 2 === 0 ? styles.alignStart : styles.alignEnd,
